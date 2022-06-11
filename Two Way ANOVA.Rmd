@@ -1,0 +1,64 @@
+---
+title: "TwoWay-ANOVA-in-R"
+output: pdf_document
+---
+
+```{r}
+library(readr)
+library(ggplot2)
+library(multcompView)
+library(dplyr)
+```
+
+```{r}
+df <- read_csv("D:/Personal research/suv/suv_anova_tukey/blast_14day.csv",show_col_types = FALSE)
+```
+
+```{r}
+head(df)
+```
+
+
+```{r}
+# Check the structure
+str(df)
+```
+
+
+```{r}
+#creating a variable as factor for the ANOVA
+df$fungi_isolate <- as.factor(df$fungi_isolate)
+df$medium <- as.factor(df$medium)
+str(df)
+```
+
+Analysis of variance
+
+Null hypothesis (H0) :     There is no effects in fungal isolation medium in fungal growth or
+                           There is no effects difference in fungal isolates in fungal growth
+
+Alternate Hypothesis (Ha): There is effects in fungal isolation medium in fungal growthor
+                           There is effects in fungal isolates in fungal growth
+
+```{r}
+anova1 <- aov(growth~fungi_isolate+medium,data=df)
+summary(anova1)
+```
+Interpret the results:
+ANOVA table shows that both factors are statistically significant at 0.05 significance level.
+
+the p-value of fungi_isolate is 85e-14 (significant), which indicates that the fungi_isolate are associated with growth rate.
+the p-value of medium is 37e-08 (significant), which indicates that the growth medium is associated with with growth rate
+
+ANOVA test, a significant p-value indicates that some of the group means are different, but we don’t know which pairs of groups are different.
+
+Tukey Honest Significant Differences Test (Tukey's test) can be used to determine if the mean difference between specific pairs of group are statistically significant.
+
+```{r}
+#Comparing means by Tukey’s test
+TukeyHSD(anova1)
+
+
+```
+
+
